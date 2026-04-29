@@ -1,5 +1,8 @@
 package main;
 
+import Exception.DAO_exception;
+import dao.DaolmpJDBC;
+import dao.IDao;
 import java.util.ArrayList;
 import model.Product;
 import model.Sale;
@@ -14,16 +17,16 @@ public class Shop {
     private Amount cash = new Amount(100.00);
     private static ArrayList<Product> inventory = new ArrayList<>();
     private ArrayList<Sale> sales = new ArrayList<>();
-    static ArrayList<Employee> employees = new ArrayList<>();
+    private IDao dao;
 
     final static double TAX_RATE = 1.04;
 
     // Constructor
     public Shop() {
+        this.dao = new DaolmpJDBC();
         inventory = new ArrayList<>();
         sales = new ArrayList<>();
-        Fichero.LeerInventario(inventory);
-
+        loadFromDB();
     }
 
     public static void main(String[] args) {
@@ -31,7 +34,7 @@ public class Shop {
         Scanner sc = new Scanner(System.in);
         Shop shop = new Shop();
         shop.initSession();
-        shop.loadInventory(inventory);
+//        shop.loadInventory(inventory);
         int opcion = 0;
         boolean exit = false;
 
@@ -89,9 +92,20 @@ public class Shop {
         } while (!exit);
     }
 
-    public void loadInventory(ArrayList<Product> inventory) {
+//    public void loadInventory(ArrayList<Product> inventory) {
 //        Fichero.LeerInventario(inventory);
-        System.out.println("Productos cargados: " + inventory.size());
+    ////        System.out.println("Productos cargados: " + inventory.size());
+//    }
+    
+    private void loadFromDB() {
+        try {
+            dao.connect();
+            inventory = new ArrayList<>(dao.readAllProducts());
+            dao.disconnect();
+            System.out.println("Productos cargados desde BD: " + inventory.size());
+        } catch (DAO_exception e) {
+            System.out.println("Error cargando productos: " + e.getMessage());
+        }
     }
 
     public void showCash() {
@@ -148,7 +162,7 @@ public class Shop {
             System.out.println("El producto no existe");
         }
     }
-  
+
     public void showInventory() {
         if (inventory.isEmpty()) {
             System.out.println("Inventario vac�o.");
@@ -299,4 +313,8 @@ public class Shop {
     public Amount getCash() {
         return cash;
     }
+    
+    public IDao getDao() {
+    return dao;
+}
 }
