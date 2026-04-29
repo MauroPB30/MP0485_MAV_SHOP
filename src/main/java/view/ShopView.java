@@ -4,6 +4,7 @@
  */
 package view;
 
+import dao.DaolmpJDBC;
 import java.awt.event.*;
 import javax.swing.*;
 import main.Shop;
@@ -13,25 +14,26 @@ import main.Shop;
  * @author usuario
  */
 public class ShopView extends javax.swing.JFrame implements ActionListener, KeyListener {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ShopView.class.getName());
-    
+
     private Shop shop;
-    
+
     private JButton btnCash;
     private JButton btnAddProduct;
     private JButton btnAddStock;
     private JButton btnDeleteProduct;
+
     /**
      * Creates new form Menu
      */
     public ShopView() {
-        
+
         initComponents();
-        
+
         shop = new Shop();
 //        shop.loadInventory(inventory);
-        
+
     }
 
     /**
@@ -48,6 +50,7 @@ public class ShopView extends javax.swing.JFrame implements ActionListener, KeyL
         addSt_button = new javax.swing.JButton();
         deletePr_button = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        listPr_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,7 +62,7 @@ public class ShopView extends javax.swing.JFrame implements ActionListener, KeyL
             }
         });
 
-        addPr_button.setText("2. A�adir producto");
+        addPr_button.setText("2. Añadir producto");
         addPr_button.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         addPr_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -67,7 +70,7 @@ public class ShopView extends javax.swing.JFrame implements ActionListener, KeyL
             }
         });
 
-        addSt_button.setText("3. A�adir stock");
+        addSt_button.setText("3. Añadir stock");
         addSt_button.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         addSt_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -83,7 +86,15 @@ public class ShopView extends javax.swing.JFrame implements ActionListener, KeyL
             }
         });
 
-        jLabel1.setText("Seleccione o pulse una acci�n:");
+        jLabel1.setText("Seleccione o pulse una acción:");
+
+        listPr_button.setText("5. Lista productos");
+        listPr_button.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        listPr_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listPr_buttonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -98,15 +109,16 @@ public class ShopView extends javax.swing.JFrame implements ActionListener, KeyL
                             .addComponent(count_button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(addPr_button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(addSt_button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(deletePr_button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(deletePr_button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(listPr_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(11, 11, 11))
                     .addComponent(jLabel1))
                 .addGap(64, 64, 64))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(70, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(39, 39, 39)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(count_button)
@@ -115,39 +127,47 @@ public class ShopView extends javax.swing.JFrame implements ActionListener, KeyL
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(addSt_button)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(listPr_button)
+                .addGap(12, 12, 12)
                 .addComponent(deletePr_button)
-                .addGap(63, 63, 63))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void count_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_count_buttonActionPerformed
-    CashView cv = new CashView(this, true, shop);
-    cv.setLocationRelativeTo(this);
-    cv.setVisible(true);
+        CashView cv = new CashView(this, true, shop);
+        cv.setLocationRelativeTo(this);
+        cv.setVisible(true);
 //    this.dispose();
     }//GEN-LAST:event_count_buttonActionPerformed
 
     private void addPr_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPr_buttonActionPerformed
         // TODO add your handling code here:
-    ProductView pv = new ProductView(this, true, shop, 2); // "add" indica acci�n
-    pv.setLocationRelativeTo(this);
-    pv.setVisible(true);     
+        ProductView pv = new ProductView(this, true, shop, 2); // "add" indica acci�n
+        pv.setLocationRelativeTo(this);
+        pv.setVisible(true);
     }//GEN-LAST:event_addPr_buttonActionPerformed
 
     private void addSt_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSt_buttonActionPerformed
-    ProductView pv = new ProductView(this, true, shop, 3); // "stock" indica acci�n
-    pv.setLocationRelativeTo(this);
-    pv.setVisible(true);    // TODO add your handling code here:
+        ProductView pv = new ProductView(this, true, shop, 3); // "stock" indica acci�n
+        pv.setLocationRelativeTo(this);
+        pv.setVisible(true);    // TODO add your handling code here:
     }//GEN-LAST:event_addSt_buttonActionPerformed
 
     private void deletePr_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePr_buttonActionPerformed
         // TODO add your handling code here:
-    ProductView pv = new ProductView(this, true, shop, 9); // "delete" indica acci�n
-    pv.setLocationRelativeTo(this);
-    pv.setVisible(true);
+        ProductView pv = new ProductView(this, true, shop, 9); // "delete" indica acci�n
+        pv.setLocationRelativeTo(this);
+        pv.setVisible(true);
     }//GEN-LAST:event_deletePr_buttonActionPerformed
+
+    private void listPr_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listPr_buttonActionPerformed
+        // TODO add your handling code here:
+        new InventoryView(this, true, (DaolmpJDBC) shop.getDao()).setVisible(true);
+
+    }//GEN-LAST:event_listPr_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -180,6 +200,7 @@ public class ShopView extends javax.swing.JFrame implements ActionListener, KeyL
     private javax.swing.JButton count_button;
     private javax.swing.JButton deletePr_button;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton listPr_button;
     // End of variables declaration//GEN-END:variables
 
     @Override
