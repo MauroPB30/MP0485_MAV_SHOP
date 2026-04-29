@@ -11,6 +11,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import model.Product;
 
 /**
  *
@@ -23,6 +27,9 @@ public class DaolmpJDBC implements IDao {
     private final String JDBC_PASS = "";
     private final String JDBC_DDBB = "shop_db";
     private final String JDBC_TABLE = "employees";
+    
+    private static final String SQL_SELECT_ALL_PRODUCTS = "SELECT * FROM products";
+
 
     private Connection connection;
 
@@ -69,4 +76,40 @@ public class DaolmpJDBC implements IDao {
             System.getLogger(DaolmpJDBC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
+
+    @Override
+    public List<Product> readAllProducts() throws DAO_exception {
+        List<Product> products = new ArrayList<>();
+        Statement instruction = null;
+        ResultSet rs = null;
+
+        try {
+            instruction = connection.createStatement();
+            rs = instruction.executeQuery(SQL_SELECT_ALL_PRODUCTS);
+
+            while (rs.next()) {
+                String name = rs.getString("name");
+                double price = rs.getDouble("price");
+                int stock = rs.getInt("stock");
+                boolean available = rs.getBoolean("available");
+                products.add(new Product(name, price, available, stock));
+            }
+
+        } catch (SQLException ex) {
+            throw new DAO_exception("Error al leer productos: " + ex.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (instruction != null) {
+                    instruction.close();
+                }
+            } catch (SQLException ex) {
+                throw new DAO_exception("Error al cerrar recursos: " + ex.getMessage());
+            }
+        }
+        return products;
+    }
+
 }
