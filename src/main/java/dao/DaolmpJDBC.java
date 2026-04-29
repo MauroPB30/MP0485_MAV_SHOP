@@ -23,18 +23,17 @@ public class DaolmpJDBC implements IDao {
     private final String JDBC_PASS = "";
     private final String JDBC_DDBB = "shop_db";
     private final String JDBC_TABLE = "employees";
-    
 
     private Connection connection;
-    
+
     @Override
     public void connect() throws DAO_exception {
         try {
             connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASS);
             System.out.println("Conexión establecida.");
-            
+
         } catch (SQLException ex) {
-        System.out.println("Error al conectar: " + ex.getMessage());
+            System.out.println("Error al conectar: " + ex.getMessage());
         }
     }
 
@@ -42,21 +41,19 @@ public class DaolmpJDBC implements IDao {
     public Employee getEmployee(String user, String pw) throws DAO_exception {
         try {
             String sql = "SELECT * FROM employees WHERE username = ? AND password = ?";
-            
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, user);
             stmt.setString(2, pw);
-            
+
             ResultSet rs = stmt.executeQuery();
-            
+
             if (rs.next()) {
-                // Si encuentra una fila, construye y devuelve el Employee
-                int    id       = rs.getInt("employeeId");
-                String nombre   = rs.getString("name");
-//                return new Employee(id, pw, nombre);
+                int id = rs.getInt("employeeId");
+                String nombre = rs.getString("name");
+                return new Employee(id, null, nombre);
             }
         } catch (SQLException ex) {
-            System.getLogger(DaolmpJDBC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            throw new DAO_exception("Error al buscar empleado: " + ex.getMessage());
         }
         return null;
     }
@@ -66,12 +63,10 @@ public class DaolmpJDBC implements IDao {
         if (connection != null) 
         try {
             connection.close();
-            
+
         } catch (SQLException ex) {
-            
+
             System.getLogger(DaolmpJDBC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-
     }
-
 }
