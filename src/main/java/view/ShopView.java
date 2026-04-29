@@ -59,7 +59,7 @@ public class ShopView extends javax.swing.JFrame implements ActionListener, KeyL
             }
         });
 
-        addPr_button.setText("2. Añadir producto");
+        addPr_button.setText("2. Aï¿½adir producto");
         addPr_button.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         addPr_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -67,7 +67,7 @@ public class ShopView extends javax.swing.JFrame implements ActionListener, KeyL
             }
         });
 
-        addSt_button.setText("3. Añadir stock");
+        addSt_button.setText("3. Aï¿½adir stock");
         addSt_button.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         addSt_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -83,7 +83,7 @@ public class ShopView extends javax.swing.JFrame implements ActionListener, KeyL
             }
         });
 
-        jLabel1.setText("Seleccione o pulse una acción:");
+        jLabel1.setText("Seleccione o pulse una acciï¿½n:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -131,20 +131,20 @@ public class ShopView extends javax.swing.JFrame implements ActionListener, KeyL
 
     private void addPr_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPr_buttonActionPerformed
         // TODO add your handling code here:
-    ProductView pv = new ProductView(this, true, shop, 2); // "add" indica acción
+    ProductView pv = new ProductView(this, true, shop, 2); // "add" indica acciï¿½n
     pv.setLocationRelativeTo(this);
     pv.setVisible(true);     
     }//GEN-LAST:event_addPr_buttonActionPerformed
 
     private void addSt_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSt_buttonActionPerformed
-    ProductView pv = new ProductView(this, true, shop, 3); // "stock" indica acción
+    ProductView pv = new ProductView(this, true, shop, 3); // "stock" indica acciï¿½n
     pv.setLocationRelativeTo(this);
     pv.setVisible(true);    // TODO add your handling code here:
     }//GEN-LAST:event_addSt_buttonActionPerformed
 
     private void deletePr_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePr_buttonActionPerformed
         // TODO add your handling code here:
-    ProductView pv = new ProductView(this, true, shop, 9); // "delete" indica acción
+    ProductView pv = new ProductView(this, true, shop, 9); // "delete" indica acciï¿½n
     pv.setLocationRelativeTo(this);
     pv.setVisible(true);
     }//GEN-LAST:event_deletePr_buttonActionPerformed
@@ -184,21 +184,17 @@ public class ShopView extends javax.swing.JFrame implements ActionListener, KeyL
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
