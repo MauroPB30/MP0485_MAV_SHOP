@@ -25,7 +25,6 @@ public class LoginView extends javax.swing.JFrame {
      */
     public LoginView() {
         initComponents();
-
     }
 
     /**
@@ -38,8 +37,8 @@ public class LoginView extends javax.swing.JFrame {
     private void initComponents() {
 
         Pw_Empl_wr = new javax.swing.JTextField();
-        Id_Empl = new javax.swing.JLabel();
-        Id_Emp_wr = new javax.swing.JSpinner();
+        Id_Empl_rd = new javax.swing.JLabel();
+        Id_Empl = new javax.swing.JSpinner();
         Psw_Empl = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         Name_Emp = new javax.swing.JLabel();
@@ -54,15 +53,15 @@ public class LoginView extends javax.swing.JFrame {
             }
         });
 
-        Id_Empl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        Id_Empl.setText("Numero de empleado");
-        Id_Empl.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Id_Empl_rd.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Id_Empl_rd.setText("Numero de empleado");
+        Id_Empl_rd.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        Id_Emp_wr.addInputMethodListener(new java.awt.event.InputMethodListener() {
+        Id_Empl.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                Id_Emp_wrInputMethodTextChanged(evt);
+                Id_EmplInputMethodTextChanged(evt);
             }
         });
 
@@ -102,9 +101,9 @@ public class LoginView extends javax.swing.JFrame {
                 .addGap(48, 48, 48)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(Name_Emp_wr)
-                    .addComponent(Id_Empl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Id_Empl_rd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Pw_Empl_wr)
-                    .addComponent(Id_Emp_wr)
+                    .addComponent(Id_Empl)
                     .addComponent(Psw_Empl, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
                     .addComponent(Name_Emp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(100, Short.MAX_VALUE))
@@ -117,9 +116,9 @@ public class LoginView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Name_Emp_wr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16)
-                .addComponent(Id_Empl)
+                .addComponent(Id_Empl_rd)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Id_Emp_wr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Id_Empl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Psw_Empl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -137,53 +136,50 @@ public class LoginView extends javax.swing.JFrame {
     }//GEN-LAST:event_Pw_Empl_wrActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-//    try {
-//
-//        String name = Name_Emp_wr.getText();
-//        int user = (int) Id_Emp_wr.getValue();
-//        String pws = Pw_Empl_wr.getText();
-//
-//        Employee emp = new Employee(user, pws, name);
-//
-//        if (emp.login(user, pws)) {
-//
-//            JOptionPane.showMessageDialog(this, "Login correcto");
-//
-//            new ShopView().setVisible(true);
-//            this.dispose();
-//
-//        } else {
-//
-//            attempts++;
-//
-//            JOptionPane.showMessageDialog(this, "Usuario o contrase�a incorrectos");
-//
-//            // Limpiar campos
-//            Name_Emp_wr.setText("");
-//            Pw_Empl_wr.setText("");
-//            Id_Emp_wr.setValue(0);
-//
-//            if (attempts >= MAX_ATTEMPTS) {
-//                throw new LimitLoginException("Se ha alcanzado el n�mero m�ximo intentos");
-//            }
-//        }
-//
-//    } catch (LimitLoginException e) {
-//
-//        JOptionPane.showMessageDialog(this, e.getMessage());
-//        System.exit(0); 
-//
-//    } catch (Exception e) {
-//
-//        JOptionPane.showMessageDialog(this, "Error en los datos");
-//    }
+        try {
+            // Esto me va a servir para recoger los valores del formulario
+            String name = Name_Emp_wr.getText();
+            String user = String.valueOf(Id_Empl.getValue()); 
+            String pws = Pw_Empl_wr.getText();
 
+            // Con esto voy a crear el DAO y el Employee con el nuevo sistema
+            dao.DaolmpJDBC dao = new dao.DaolmpJDBC();
+            Employee emp = new Employee(0, dao, name);
+
+            // Aqui voy a llamar al login — consulta MySQL
+            if (emp.login(user, pws)) {
+
+                JOptionPane.showMessageDialog(this, "Login correcto");
+                new ShopView().setVisible(true);
+                this.dispose();
+
+            } else {
+
+                attempts++;
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos. Intento " + attempts + "/" + MAX_ATTEMPTS);
+
+                // Limpiar campos
+                Name_Emp_wr.setText("");
+                Pw_Empl_wr.setText("");
+                Id_Empl.setValue(0);
+
+                if (attempts >= MAX_ATTEMPTS) {
+                    throw new LimitLoginException("Número máximo de intentos alcanzado");
+                }
+            }
+
+        } catch (LimitLoginException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+            System.exit(0);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void Id_Emp_wrInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_Id_Emp_wrInputMethodTextChanged
+    private void Id_EmplInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_Id_EmplInputMethodTextChanged
         // TODO addour handling code here:
-    }//GEN-LAST:event_Id_Emp_wrInputMethodTextChanged
+    }//GEN-LAST:event_Id_EmplInputMethodTextChanged
 
     private void Name_Emp_wrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Name_Emp_wrActionPerformed
         // TODO add your handling code here:
@@ -215,8 +211,8 @@ public class LoginView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSpinner Id_Emp_wr;
-    private javax.swing.JLabel Id_Empl;
+    private javax.swing.JSpinner Id_Empl;
+    private javax.swing.JLabel Id_Empl_rd;
     private javax.swing.JLabel Name_Emp;
     private javax.swing.JTextField Name_Emp_wr;
     private javax.swing.JLabel Psw_Empl;

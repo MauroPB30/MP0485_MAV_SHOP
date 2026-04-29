@@ -32,9 +32,9 @@
               <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="Name_Emp_wr" max="32767" attributes="0"/>
-                  <Component id="Id_Empl" max="32767" attributes="0"/>
+                  <Component id="Id_Empl_rd" max="32767" attributes="0"/>
                   <Component id="Pw_Empl_wr" max="32767" attributes="0"/>
-                  <Component id="Id_Emp_wr" max="32767" attributes="0"/>
+                  <Component id="Id_Empl" max="32767" attributes="0"/>
                   <Component id="Psw_Empl" alignment="0" pref="131" max="32767" attributes="0"/>
                   <Component id="Name_Emp" alignment="0" max="32767" attributes="0"/>
               </Group>
@@ -50,9 +50,9 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="Name_Emp_wr" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-              <Component id="Id_Empl" min="-2" max="-2" attributes="0"/>
+              <Component id="Id_Empl_rd" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="Id_Emp_wr" min="-2" max="-2" attributes="0"/>
+              <Component id="Id_Empl" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="Psw_Empl" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -77,7 +77,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Pw_Empl_wrActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="Id_Empl">
+    <Component class="javax.swing.JLabel" name="Id_Empl_rd">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="Numero de empleado"/>
@@ -88,9 +88,9 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JSpinner" name="Id_Emp_wr">
+    <Component class="javax.swing.JSpinner" name="Id_Empl">
       <Events>
-        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="Id_Emp_wrInputMethodTextChanged"/>
+        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="Id_EmplInputMethodTextChanged"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="Psw_Empl">
