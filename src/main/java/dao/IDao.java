@@ -22,5 +22,11 @@ public interface IDao {
     public void disconnect() throws DAO_exception;
 
     List<Product> readAllProducts() throws DAO_exception;
+    
+    boolean updateStock(String name, int newStock) throws DAO_exception;
 
+    boolean insertProduct(Product p) throws DAO_exception;
+    
+    boolean deleteProduct(String name) throws DAO_exception;
+    
 }
