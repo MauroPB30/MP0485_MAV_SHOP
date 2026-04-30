@@ -258,26 +258,49 @@ public class Shop {
         if (findProduct(name) != null) {
             return false;
         }
-        inventory.add(new Product(name, price, true, stock));
+        Product p = new Product(name, price, true, stock);
+        inventory.add(p);
+        try {
+            dao.connect();
+            dao.insertProduct(p); // ← falta esto
+            dao.disconnect();
+        } catch (DAO_exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
         return true;
     }
 
     public boolean addStock(String name, int stockToAdd) {
         Product product = findProduct(name);
-        if (product != null) {
-            product.setStock(product.getStock() + stockToAdd);
-            return true;
+        if (product == null) {
+            return false;
         }
-        return false;
+        int nuevoStock = product.getStock() + stockToAdd;
+        product.setStock(nuevoStock);  // ← memoria
+        try {
+            dao.connect();
+            dao.updateStock(name, nuevoStock); // ← MySQL
+            dao.disconnect();
+        } catch (DAO_exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return true;
     }
 
     public boolean deleteProduct(String name) {
-        Product product = findProduct(name);
-        if (product != null) {
-            inventory.remove(product);
-            return true;
+        Product p = findProduct(name);
+        if (p == null) {
+            return false;
         }
-        return false;
+        inventory.remove(p);        // ← memoria
+        try {
+            dao.connect();
+            dao.deleteProduct(name); // ← MySQL
+            dao.disconnect();
+        } catch (DAO_exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return true;
     }
 
     public Product findProduct(String name) {
@@ -313,8 +336,8 @@ public class Shop {
     public Amount getCash() {
         return cash;
     }
-    
+
     public IDao getDao() {
-    return dao;
-}
+        return dao;
+    }
 }
