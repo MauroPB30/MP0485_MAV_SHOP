@@ -27,9 +27,12 @@ public class DaolmpJDBC implements IDao {
     private final String JDBC_PASS = "";
     private final String JDBC_DDBB = "shop_db";
     private final String JDBC_TABLE = "employees";
-    
-    private static final String SQL_SELECT_ALL_PRODUCTS = "SELECT * FROM products";
 
+    private static final String SQL_SELECT_ALL_PRODUCTS = "SELECT * FROM products";
+    private static final String SQL_INSERT_PRODUCT = "INSERT INTO products (name, price, stock, available) VALUES (?, ?, ?, ?)";
+    private static final String SQL_UPDATE_STOCK = "UPDATE products SET stock = ? WHERE name = ?";
+    private static final String SQL_DELETE_PRODUCT = "DELETE FROM products WHERE name = ?";
+    private static final String SQL_SELECT_EMPLOYEE = "SELECT * FROM employees WHERE username = ? AND password = ?";
 
     private Connection connection;
 
@@ -48,7 +51,7 @@ public class DaolmpJDBC implements IDao {
     public Employee getEmployee(String user, String pw) throws DAO_exception {
         try {
             String sql = "SELECT * FROM employees WHERE username = ? AND password = ?";
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            PreparedStatement stmt = connection.prepareStatement(SQL_SELECT_EMPLOYEE);
             stmt.setString(1, user);
             stmt.setString(2, pw);
 
@@ -112,4 +115,46 @@ public class DaolmpJDBC implements IDao {
         return products;
     }
 
+    @Override
+    public boolean updateStock(String name, int newStock) throws DAO_exception {
+        try {
+            String sql = "UPDATE products SET stock = ? WHERE name = ?";
+            PreparedStatement stmt = connection.prepareStatement(SQL_UPDATE_STOCK);
+            stmt.setInt(1, newStock);    // nuevo valor de stock
+            stmt.setString(2, name);     // producto a actualizar
+            int rows = stmt.executeUpdate();
+            return rows > 0; // true si actualizó alguna fila
+        } catch (SQLException ex) {
+            throw new DAO_exception("Error actualizando stock: " + ex.getMessage());
+        }
+    }
+
+    @Override
+    public boolean insertProduct(Product p) throws DAO_exception {
+        try {
+            String sql = "INSERT INTO products (name, price, stock, available) VALUES (?, ?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(SQL_INSERT_PRODUCT);
+            stmt.setString(1, p.getName());
+            stmt.setDouble(2, p.getWholesalerPrice().getValue()); // Amount → double
+            stmt.setInt(3, p.getStock());
+            stmt.setBoolean(4, p.isAvailable());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteProduct(String name) throws DAO_exception {
+        try {
+            String sql = "DELETE FROM products WHERE name = ?";
+            PreparedStatement stmt = connection.prepareStatement(SQL_DELETE_PRODUCT);
+            stmt.setString(1, name);
+            int rows = stmt.executeUpdate();
+            return rows > 0; // true si borró alguna fila
+        } catch (SQLException ex) {
+            throw new DAO_exception("Error eliminando producto: " + ex.getMessage());
+        }
+    }
 }
