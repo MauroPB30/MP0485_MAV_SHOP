@@ -39,6 +39,7 @@ public class DaolmpJDBC implements IDao {
     @Override
     public void connect() throws DAO_exception {
         try {
+            initDatabase();
             connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASS);
             System.out.println("Conexión establecida.");
 
@@ -47,10 +48,67 @@ public class DaolmpJDBC implements IDao {
         }
     }
 
+    // CREACION DE BBDD 
+    private static final String SQL_CREATE_DB
+            = "CREATE DATABASE IF NOT EXISTS shop_db";
+
+    private static final String SQL_CREATE_TABLE_EMPLOYEES
+            = "CREATE TABLE IF NOT EXISTS employees ("
+            + "employeeId INT PRIMARY KEY AUTO_INCREMENT,"
+            + "name VARCHAR(100) NOT NULL,"
+            + "username VARCHAR(50) NOT NULL UNIQUE,"
+            + "password VARCHAR(50) NOT NULL)";
+
+    private static final String SQL_CREATE_TABLE_PRODUCTS
+            = "CREATE TABLE IF NOT EXISTS products ("
+            + "id INT PRIMARY KEY AUTO_INCREMENT,"
+            + "name VARCHAR(100) NOT NULL UNIQUE,"
+            + "price DOUBLE NOT NULL,"
+            + "stock INT NOT NULL,"
+            + "available BOOLEAN NOT NULL DEFAULT true)";
+
+    private static final String SQL_INSERT_DEFAULT_EMPLOYEE
+            = "INSERT IGNORE INTO employees (name, username, password) "
+            + "VALUES ('Admin', '123', 'test')";
+
+    // INICIALIZACION DEL DATABASE 
+    private void initDatabase() {
+        try {
+            // 1. Primero conecta SIN especificar la BD
+            Connection tempConn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/", JDBC_USER, JDBC_PASS
+            );
+            Statement stmt = tempConn.createStatement();
+
+            // 2. Crea la BD si no existe
+            stmt.executeUpdate(SQL_CREATE_DB);
+            System.out.println("Base de datos lista.");
+
+            // 3. Selecciona la BD
+            stmt.executeUpdate("USE shop_db");
+
+            // 4. Crea las tablas si no existen
+            stmt.executeUpdate(SQL_CREATE_TABLE_EMPLOYEES);
+            stmt.executeUpdate(SQL_CREATE_TABLE_PRODUCTS);
+            System.out.println("Tablas listas.");
+
+            // 5. Inserta el empleado por defecto si no existe
+            stmt.executeUpdate(SQL_INSERT_DEFAULT_EMPLOYEE);
+            System.out.println("Datos iniciales listos.");
+
+            stmt.close();
+            tempConn.close();
+
+        } catch (SQLException ex) {
+            System.out.println("Error inicializando BD: " + ex.getMessage());
+        }
+    }
+
+    // METODOS
     @Override
     public Employee getEmployee(String user, String pw) throws DAO_exception {
         try {
-            String sql = "SELECT * FROM employees WHERE username = ? AND password = ?";
+//            String sql = "SELECT * FROM employees WHERE username = ? AND password = ?";
             PreparedStatement stmt = connection.prepareStatement(SQL_SELECT_EMPLOYEE);
             stmt.setString(1, user);
             stmt.setString(2, pw);
@@ -118,7 +176,7 @@ public class DaolmpJDBC implements IDao {
     @Override
     public boolean updateStock(String name, int newStock) throws DAO_exception {
         try {
-            String sql = "UPDATE products SET stock = ? WHERE name = ?";
+//            String sql = "UPDATE products SET stock = ? WHERE name = ?";
             PreparedStatement stmt = connection.prepareStatement(SQL_UPDATE_STOCK);
             stmt.setInt(1, newStock);    // nuevo valor de stock
             stmt.setString(2, name);     // producto a actualizar
@@ -132,7 +190,7 @@ public class DaolmpJDBC implements IDao {
     @Override
     public boolean insertProduct(Product p) throws DAO_exception {
         try {
-            String sql = "INSERT INTO products (name, price, stock, available) VALUES (?, ?, ?, ?)";
+//            String sql = "INSERT INTO products (name, price, stock, available) VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(SQL_INSERT_PRODUCT);
             stmt.setString(1, p.getName());
             stmt.setDouble(2, p.getWholesalerPrice().getValue()); // Amount → double
@@ -148,7 +206,7 @@ public class DaolmpJDBC implements IDao {
     @Override
     public boolean deleteProduct(String name) throws DAO_exception {
         try {
-            String sql = "DELETE FROM products WHERE name = ?";
+//            String sql = "DELETE FROM products WHERE name = ?";
             PreparedStatement stmt = connection.prepareStatement(SQL_DELETE_PRODUCT);
             stmt.setString(1, name);
             int rows = stmt.executeUpdate();
