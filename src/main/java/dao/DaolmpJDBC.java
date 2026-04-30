@@ -74,25 +74,24 @@ public class DaolmpJDBC implements IDao {
     // INICIALIZACION DEL DATABASE 
     private void initDatabase() {
         try {
-            // 1. Primero conecta SIN especificar la BD
             Connection tempConn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/", JDBC_USER, JDBC_PASS
             );
             Statement stmt = tempConn.createStatement();
 
-            // 2. Crea la BD si no existe
+            // Esto crea la BBDD si no existe
             stmt.executeUpdate(SQL_CREATE_DB);
             System.out.println("Base de datos lista.");
 
-            // 3. Selecciona la BD
+            // Esto selecciona la BBDD
             stmt.executeUpdate("USE shop_db");
 
-            // 4. Crea las tablas si no existen
+            // Con esto creamos las tablas si no existen
             stmt.executeUpdate(SQL_CREATE_TABLE_EMPLOYEES);
             stmt.executeUpdate(SQL_CREATE_TABLE_PRODUCTS);
             System.out.println("Tablas listas.");
 
-            // 5. Inserta el empleado por defecto si no existe
+            // Aqui vamos a insertar el empleado por defecto si no existe
             stmt.executeUpdate(SQL_INSERT_DEFAULT_EMPLOYEE);
             System.out.println("Datos iniciales listos.");
 
